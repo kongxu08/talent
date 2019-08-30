@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.Dm_num_cubeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.Dm_num_cube">
+        <result column="pk_psndoc" property="pk_psndoc" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="birthdate" property="birthdate" />
+        <result column="id" property="id" />
+        <result column="glbdef4" property="glbdef4" />
+        <result column="glbdef5" property="glbdef5" />
+        <result column="glbdef6" property="glbdef6" />
+        <result column="nationality" property="nationality" />
+        <result column="age" property="age" />
+        <result column="age_range" property="age_range" />
+        <result column="workage_range" property="workage_range" />
+        <result column="joinworkdate" property="joinworkdate" />
+        <result column="glbdef28" property="glbdef28" />
+        <result column="mobile" property="mobile" />
+        <result column="email" property="email" />
+        <result column="pk_org" property="pk_org" />
+        <result column="pk_hrorg" property="pk_hrorg" />
+        <result column="marital" property="marital" />
+        <result column="glbdef21" property="glbdef21" />
+        <result column="glbdef22" property="glbdef22" />
+        <result column="glbdef33" property="glbdef33" />
+        <result column="glbdef23" property="glbdef23" />
+        <result column="polity" property="polity" />
+        <result column="glbdef41" property="glbdef41" />
+        <result column="edu" property="edu" />
+        <result column="glbdef39" property="glbdef39" />
+        <result column="glbdef37" property="glbdef37" />
+        <result column="pk_dept" property="pk_dept" />
+        <result column="pk_post" property="pk_post" />
+        <result column="pk_postseries" property="pk_postseries" />
+        <result column="pk_psncl" property="pk_psncl" />
+        <result column="glbdef2" property="glbdef2" />
+        <result column="zyzg" property="zyzg" />
+        <result column="rylb" property="rylb" />
+        <result column="analysisorg1" property="analysisorg1" />
+        <result column="pk_org1" property="pk_org1" />
+        <result column="analysisorg2" property="analysisorg2" />
+        <result column="pk_org2" property="pk_org2" />
+        <result column="analysisorg3" property="analysisorg3" />
+        <result column="CORPSEQ" property="CORPSEQ" />
+        <result column="DEPTSEQ" property="DEPTSEQ" />
+        <result column="MNECODE" property="MNECODE" />
+        <result column="edumemo" property="edumemo" />
+        <result column="eduseq" property="eduseq" />
+        <result column="showorder" property="showorder" />
+        <result column="age_seq" property="age_seq" />
+        <result column="WORKAGE_seq" property="WORKAGE_seq" />
+        <result column="GLBDEF22_rank" property="GLBDEF22_rank" />
+        <result column="GLBDEF23_rank" property="GLBDEF23_rank" />
+        <result column="GLBDEF23_NAME" property="GLBDEF23_NAME" />
+        <result column="GLBDEF41_NAME" property="GLBDEF41_NAME" />
+        <result column="GLBDEF41_RANK" property="GLBDEF41_RANK" />
+        <result column="school" property="school" />
+        <result column="glbdef3" property="glbdef3" />
+        <result column="zhuanye" property="zhuanye" />
+        <result column="GLBDEF22_RAND" property="GLBDEF22_RAND" />
+        <result column="GLBDEF23_RAND" property="GLBDEF23_RAND" />
+        <result column="joinpolitydate" property="joinpolitydate" />
+        <result column="glbdef51" property="glbdef51" />
+        <result column="glbdef52" property="glbdef52" />
+        <result column="glrc" property="glrc" />
+    </resultMap>
+
+    <select id="highLevevlQuery" resultMap="BaseResultMap">
+        SELECT
+            t.*
+        FROM
+            hr_dm_num_cube t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

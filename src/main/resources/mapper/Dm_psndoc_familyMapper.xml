@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.Dm_psndoc_familyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.Dm_psndoc_family">
+        <result column="mem_name" property="mem_name" />
+        <result column="mem_relation" property="mem_relation" />
+        <result column="mem_birthday" property="mem_birthday" />
+        <result column="mem_corp" property="mem_corp" />
+        <result column="mem_job" property="mem_job" />
+        <result column="relaaddr" property="relaaddr" />
+        <result column="relaphone" property="relaphone" />
+        <result column="profession" property="profession" />
+        <result column="politics" property="politics" />
+        <result column="pk_psndoc" property="pk_psndoc" />
+    </resultMap>
+
+</mapper>

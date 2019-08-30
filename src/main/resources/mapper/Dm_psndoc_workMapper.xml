@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.Dm_psndoc_workMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.Dm_psndoc_work">
+        <result column="begindate" property="begindate" />
+        <result column="bg_check" property="bg_check" />
+        <result column="certifier" property="certifier" />
+        <result column="certiphone" property="certiphone" />
+        <result column="creationtime" property="creationtime" />
+        <result column="creator" property="creator" />
+        <result column="dimission_reason" property="dimission_reason" />
+        <result column="dr" property="dr" />
+        <result column="enddate" property="enddate" />
+        <result column="lastflag" property="lastflag" />
+        <result column="linkphone" property="linkphone" />
+        <result column="memo" property="memo" />
+        <result column="modifiedtime" property="modifiedtime" />
+        <result column="modifier" property="modifier" />
+        <result column="pk_group" property="pk_group" />
+        <result column="pk_org" property="pk_org" />
+        <result column="pk_psndoc" property="pk_psndoc" />
+        <result column="pk_psndoc_sub" property="pk_psndoc_sub" />
+        <result column="pk_psnjob" property="pk_psnjob" />
+        <result column="pk_psnorg" property="pk_psnorg" />
+        <result column="recordnum" property="recordnum" />
+        <result column="ts" property="ts" />
+        <result column="work_addr" property="work_addr" />
+        <result column="workachive" property="workachive" />
+        <result column="workcorp" property="workcorp" />
+        <result column="workdept" property="workdept" />
+        <result column="workduty" property="workduty" />
+        <result column="workjob" property="workjob" />
+        <result column="workpost" property="workpost" />
+    </resultMap>
+
+</mapper>

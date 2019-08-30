@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.T_YFZX_SLLWMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.T_YFZX_SLLW">
+        <result column="ID" property="ID" />
+        <result column="FSFL" property="FSFL" />
+        <result column="FSBT" property="FSBT" />
+        <result column="FSZZ" property="FSZZ" />
+        <result column="FSQK" property="FSQK" />
+        <result column="FSSJK" property="FSSJK" />
+        <result column="FDFXSJ" property="FDFXSJ" />
+        <result column="FDSLSJ" property="FDSLSJ" />
+        <result column="FSDW" property="FSDW" />
+        <result column="FSRCDJH" property="FSRCDJH" />
+        <result column="FSBZ" property="FSBZ" />
+        <result column="FDCREATETIME" property="FDCREATETIME" />
+        <result column="FSCREATEUSERID" property="FSCREATEUSERID" />
+        <result column="FSCREATEUSERNAME" property="FSCREATEUSERNAME" />
+        <result column="FSCREATEDEPTID" property="FSCREATEDEPTID" />
+        <result column="FSCREATEDEPTNAME" property="FSCREATEDEPTNAME" />
+        <result column="pk_psndoc" property="pk_psndoc" />
+        <result column="seq" property="seq" />
+    </resultMap>
+
+</mapper>

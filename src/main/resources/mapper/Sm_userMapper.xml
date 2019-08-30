@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.Sm_userMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.Sm_user">
+        <result column="user_code" property="user_code" />
+        <result column="user_name" property="user_name" />
+        <result column="user_note" property="user_note" />
+    </resultMap>
+
+    <select id="getPic" parameterType="java.util.Map" resultType="map" >
+      select t.previewphoto from  hr_stg_bd_psndoc t WHERE t.pk_psndoc=#{pk_psndoc}
+    </select>
+</mapper>

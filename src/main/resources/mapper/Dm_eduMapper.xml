@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.Dm_eduMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.Dm_edu">
+        <result column="begindate" property="begindate" />
+        <result column="enddate" property="enddate" />
+        <result column="school" property="school" />
+        <result column="schooltype" property="schooltype" />
+        <result column="studymode" property="studymode" />
+        <result column="education" property="education" />
+        <result column="pk_degree" property="pk_degree" />
+        <result column="glbdef1" property="glbdef1" />
+        <result column="degreedate" property="degreedate" />
+        <result column="degreeunit" property="degreeunit" />
+        <result column="educationctifcode" property="educationctifcode" />
+        <result column="certifcode" property="certifcode" />
+        <result column="lasteducation" property="lasteducation" />
+        <result column="recordnum" property="recordnum" />
+        <result column="pk_psndoc" property="pk_psndoc" />
+        <result column="pk_psndoc_sub" property="pk_psndoc_sub" />
+        <result column="glbdef2" property="glbdef2" />
+        <result column="glbdef3" property="glbdef3" />
+        <result column="glbdef4" property="glbdef4" />
+    </resultMap>
+
+</mapper>

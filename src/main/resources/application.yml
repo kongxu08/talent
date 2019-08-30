@@ -1,0 +1,48 @@
+server:
+  port: 8068
+  servlet:
+    context-path: /talent
+  tomcat:
+    uri-encoding: UTF-8
+web:
+  upload-path: c:/talent/
+
+source:
+  photo:
+    url: http://app.cjwsjy.com.cn/UploadedFiles/Framework.Web/
+
+logging:
+  level:
+    root: info
+  file: c:/talent/logs/talent.log
+
+spring:
+  profiles:
+    active: dev
+#    active: prod
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  resources:
+    static-locations: file:${web.upload-path}
+  datasource:
+    username: bqdw
+    password: cjwsjy.nchr
+    url: jdbc:sqlserver://10.6.189.12:1433;DatabaseName=BQDW
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  typeAliasesPackage: com.cjwsjy.talents.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true
+    cache-enabled: true
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      db-type: SQL_SERVER
+      capital-mode: false #开启大写命名
+      column-like: true #开启 LIKE 查询

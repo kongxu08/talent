@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.DM_KJHJCGDJMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.DM_KJHJCGDJ">
+        <result column="fssqh" property="fssqh" />
+        <result column="fsjldl" property="fsjldl" />
+        <result column="fsjldj" property="fsjldj" />
+        <result column="fsjllb" property="fsjllb" />
+        <result column="fisj" property="fisj" />
+        <result column="FSXMMC" property="FSXMMC" />
+        <result column="fshjlb" property="fshjlb" />
+        <result column="fsbfbm" property="fsbfbm" />
+        <result column="fszsbh" property="fszsbh" />
+        <result column="name" property="name" />
+        <result column="pk_psndoc" property="pk_psndoc" />
+    </resultMap>
+
+</mapper>
