@@ -222,7 +222,7 @@ public class AllCompanyController {
         //项目经历
         QueryWrapper<Dm_xmjl> jlWrapper = new QueryWrapper<>();
         jlWrapper.eq("pk_psndoc",psndoc);
-        jlWrapper.orderByDesc("glbdef7");
+        jlWrapper.orderByDesc("recordnum");
         List<Dm_xmjl> jllist = dm_xmjlService.list(jlWrapper);
         //国家职业资格
         QueryWrapper<Stg_hi_psndoc_glbdef10> zgWrapper = new QueryWrapper<>();
