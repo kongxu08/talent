@@ -51,6 +51,10 @@ public class AllCompanyController {
     private IDm_xmjlService dm_xmjlService;
     @Autowired
     private IStg_hi_psndoc_glbdef10Service stg_hi_psndoc_glbdef10Service;
+    @Autowired
+    private IT_YFZX_SLLWService t_yfzx_sllwService;
+    @Autowired
+    private IDM_ZLXXService dm_zlxxService;
 
 
     //http://localhost:8068/talent/rest/manageTalentPage?userId=1&current=12&pagesize=10
@@ -229,6 +233,16 @@ public class AllCompanyController {
         zgWrapper.eq("pk_psndoc",psndoc);
         zgWrapper.orderByDesc("glbdef3");
         List<Stg_hi_psndoc_glbdef10> zglist = stg_hi_psndoc_glbdef10Service.list(zgWrapper);
+        //论文论著
+        QueryWrapper<T_YFZX_SLLW> essayWrapper = new QueryWrapper<>();
+        essayWrapper.eq("pk_psndoc",psndoc);
+        essayWrapper.orderByDesc("FDFXSJ");
+        List<T_YFZX_SLLW> essaylist = t_yfzx_sllwService.list(essayWrapper);
+        //专利信息
+        QueryWrapper<DM_ZLXX> patentWrapper = new QueryWrapper<>();
+        patentWrapper.eq("pk_psndoc",psndoc);
+        patentWrapper.orderByDesc("fipx");
+        List<DM_ZLXX> patentlist = dm_zlxxService.list(patentWrapper);
 
         JSONObject result = FastJsonUtils.objectToJSONObject(person);
         JSONArray edus = FastJsonUtils.objectToJSONArray(edulist);
@@ -243,6 +257,8 @@ public class AllCompanyController {
         JSONArray honors = FastJsonUtils.objectToJSONArray(honorlist);
         JSONArray jls = FastJsonUtils.objectToJSONArray(jllist);
         JSONArray zgs = FastJsonUtils.objectToJSONArray(zglist);
+        JSONArray essays = FastJsonUtils.objectToJSONArray(essaylist);
+        JSONArray patents = FastJsonUtils.objectToJSONArray(patentlist);
 
         result.put("edus", edus);//学历信息
         result.put("works", works);//工作履历
@@ -256,6 +272,8 @@ public class AllCompanyController {
         result.put("zys", zys);//执业资格
         result.put("jls", jls);//项目经历
         result.put("zgs", zgs);//职业资格
+        result.put("essays",essays);//论文论著
+        result.put("patents",patents);//专利信息
 
         return ResponseResult.success(result, null);
     }
