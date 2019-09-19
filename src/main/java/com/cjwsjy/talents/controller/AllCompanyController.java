@@ -241,7 +241,7 @@ public class AllCompanyController {
         //专利信息
         QueryWrapper<DM_ZLXX> patentWrapper = new QueryWrapper<>();
         patentWrapper.eq("pk_psndoc",psndoc);
-        patentWrapper.orderByDesc("fipx");
+        patentWrapper.orderByDesc("FDGJSQR");
         List<DM_ZLXX> patentlist = dm_zlxxService.list(patentWrapper);
 
         JSONObject result = FastJsonUtils.objectToJSONObject(person);
