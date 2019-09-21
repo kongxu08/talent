@@ -67,8 +67,9 @@ public class AllCompanyController {
             @ApiImplicitParam(name = "current", value = "页码", dataType = "int",example = "1", paramType = "query")
     })
     @PostMapping("/allTalentPage")
+    @Cacheable(value="userInfoCache")
     @ResponseBody
-    ResponseResult allTalentPage(@RequestBody Map body) {
+    public ResponseResult allTalentPage(@RequestBody Map body) {
         int current = Integer.parseInt(body.get("current").toString());
         int pagesize = Integer.parseInt(body.get("pagesize").toString());
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
