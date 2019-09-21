@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,6 +60,7 @@ public class AllCompanyController {
 
     //http://localhost:8068/talent/rest/manageTalentPage?userId=1&current=12&pagesize=10
     //http://10.6.180.131:8068/talent/swagger-ui.html
+//       "pk_psndoc": "0001A310000000000RD3"
     @ApiOperation(notes = "获取全员信息查询分页数据", httpMethod = "POST", value = "获取全员信息查询分页数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pagesize", value = "每页数量", dataType = "int",example = "1", paramType = "query"),
@@ -168,8 +170,9 @@ public class AllCompanyController {
             @ApiImplicitParam(name = "psndoc", value = "被查询用户id", paramType = "query", required = true)
     })
     @PostMapping("/allTalentInfo")
+    @Cacheable(value="userInfoCache", key="#root.targetClass+'-'+#root.methodName+'-'+#psndoc")
     @ResponseBody
-    ResponseResult allTalentInfo(@RequestParam("userId") String userId, @RequestParam("psndoc") String psndoc) {
+    public ResponseResult allTalentInfo(@RequestParam("userId") String userId, @RequestParam("psndoc") String psndoc) {
         //人员基本信息
         QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<>();
         wrapper.eq("pk_psndoc", psndoc);
