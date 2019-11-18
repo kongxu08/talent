@@ -53,11 +53,11 @@ public class MpGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.nochange);// 表名生成策略
 
-        strategy.setTablePrefix(new String[]{"hr_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{"hr_dm_"});// 此处可以修改为您的表前缀
         strategy.entityTableFieldAnnotationEnable(true);
         strategy.setRestControllerStyle(true);
         strategy.setEntityLombokModel(false);
-        strategy.setInclude("hr_dim_org_orgs2");//修改替换成你需要的表名，多个表名传数组
+        strategy.setInclude("hr_dm_lunwen");//修改替换成你需要的表名，多个表名传数组
 
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");

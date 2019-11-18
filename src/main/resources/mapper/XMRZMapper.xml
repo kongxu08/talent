@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjwsjy.talents.dao.XMRZMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cjwsjy.talents.entity.XMRZ">
+        <result column="PK_PSNDOC_SUB" property="PK_PSNDOC_SUB" />
+        <result column="PK_PSNDOC" property="PK_PSNDOC" />
+        <result column="GLBDEF1" property="GLBDEF1" />
+        <result column="GLBDEF7" property="GLBDEF7" />
+        <result column="GLBDEF2" property="GLBDEF2" />
+        <result column="RECORDNUM" property="RECORDNUM" />
+        <result column="GLBDEF3" property="GLBDEF3" />
+        <result column="LASTFLAG" property="LASTFLAG" />
+        <result column="GLBDEF4" property="GLBDEF4" />
+        <result column="GLBDEF5" property="GLBDEF5" />
+        <result column="GLBDEF6" property="GLBDEF6" />
+        <result column="GLBDEF8" property="GLBDEF8" />
+        <result column="glbdef9" property="glbdef9" />
+    </resultMap>
+
+</mapper>

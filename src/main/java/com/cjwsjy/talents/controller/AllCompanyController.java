@@ -56,8 +56,12 @@ public class AllCompanyController {
     private IT_YFZX_SLLWService t_yfzx_sllwService;
     @Autowired
     private IDM_ZLXXService dm_zlxxService;
-
-
+    @Autowired
+    private IXMRZService xmrzService;
+    @Autowired
+    private ILunwenService lunwenService;
+    @Autowired
+    private IDm_lwlzService dm_lwlzService;
     //http://localhost:8068/talent/rest/manageTalentPage?userId=1&current=12&pagesize=10
     //http://10.6.180.131:8068/talent/swagger-ui.html
 //       "pk_psndoc": "0001A310000000000RD3"
@@ -247,6 +251,21 @@ public class AllCompanyController {
         patentWrapper.eq("pk_psndoc",psndoc);
         patentWrapper.orderByDesc("FDGJSQR");
         List<DM_ZLXX> patentlist = dm_zlxxService.list(patentWrapper);
+        //项目任职信息
+        QueryWrapper<XMRZ> xmrzWrapper = new QueryWrapper<>();
+        xmrzWrapper.eq("PK_PSNDOC",psndoc);
+        xmrzWrapper.orderByDesc("GLBDEF3");
+        List<XMRZ> xmrzlist = xmrzService.list(xmrzWrapper);
+        //论文
+        QueryWrapper<Lunwen> lunwenWrapper = new QueryWrapper<>();
+        lunwenWrapper.eq("pk_psndoc",psndoc);
+        lunwenWrapper.orderByDesc("glbdef7");
+        List<Lunwen> lunwenlist = lunwenService.list(lunwenWrapper);
+        //论著
+        QueryWrapper<Dm_lwlz> lunzhuWrapper = new QueryWrapper<>();
+        lunzhuWrapper.eq("pk_psndoc",psndoc);
+        lunzhuWrapper.orderByDesc("glbdef2");
+        List<Dm_lwlz> lunzhulist = dm_lwlzService.list(lunzhuWrapper);
 
         JSONObject result = FastJsonUtils.objectToJSONObject(person);
         JSONArray edus = FastJsonUtils.objectToJSONArray(edulist);
@@ -263,6 +282,9 @@ public class AllCompanyController {
         JSONArray zgs = FastJsonUtils.objectToJSONArray(zglist);
         JSONArray essays = FastJsonUtils.objectToJSONArray(essaylist);
         JSONArray patents = FastJsonUtils.objectToJSONArray(patentlist);
+        JSONArray xmrzs = FastJsonUtils.objectToJSONArray(xmrzlist);
+        JSONArray lunwens = FastJsonUtils.objectToJSONArray(lunwenlist);
+        JSONArray lunzhus = FastJsonUtils.objectToJSONArray(lunzhulist);
 
         result.put("edus", edus);//学历信息
         result.put("works", works);//工作履历
@@ -276,8 +298,11 @@ public class AllCompanyController {
         result.put("zys", zys);//执业资格
         result.put("jls", jls);//项目经历
         result.put("zgs", zgs);//职业资格
-        result.put("essays",essays);//论文论著
+//        result.put("essays",essays);//论文论著
         result.put("patents",patents);//专利信息
+        result.put("xmrzs",xmrzs);//项目任职信息
+        result.put("lunwens",lunwens);//论文
+        result.put("lunzhus",lunzhus);//论著
 
         return ResponseResult.success(result, null);
     }
