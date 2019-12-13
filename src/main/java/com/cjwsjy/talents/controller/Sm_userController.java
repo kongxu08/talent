@@ -136,7 +136,7 @@ public class Sm_userController {
 
 
             String spath = soucrcePhoto+userName+".jpg";
-            ImageUtil.compressionByWidth(spath,photoPath,80);
+            ImageUtil.compressionByWidth(spath,photoPath,240);
         }
     }
 

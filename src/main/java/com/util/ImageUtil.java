@@ -99,7 +99,7 @@ public class ImageUtil {
         try {
             url = new URL(inUrl);
             BufferedImage read = ImageIO.read(url);
-            int outWidth = 80;
+            int outWidth = maxWidth;
             if(read.getWidth()>outWidth){
                 double scale = (double)outWidth/read.getWidth();
                 Thumbnails.of(url).scale(scale).toFile(outPath);
