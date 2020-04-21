@@ -8,4 +8,34 @@
         <result column="seq" property="seq" />
     </resultMap>
 
+    <select id="getOrgEmployeeNum" resultType="map">
+        SELECT
+            analysisorg1 'org',
+            COUNT (pk_psndoc) 'num',
+            o.seq 'order'
+        FROM
+            hr_dim_org_orgs2 o
+        INNER JOIN hr_dm_num_cube n ON o.shortname = n.analysisorg1
+        GROUP BY
+            n.analysisorg1,
+            o.seq
+        ORDER BY
+            o.seq
+    </select>
+
+    <select id="getEmployeeType" resultType="map">
+        SELECT
+            rylb 'rylb',
+            COUNT (pk_psndoc) 'num'
+        FROM
+            hr_dim_org_orgs2 o
+        INNER JOIN hr_dm_num_cube n ON o.shortname = n.analysisorg1
+        where 1=1
+        <if test="org!=null and org!=''">
+        and n.analysisorg1=#{org}
+        </if>
+        GROUP BY
+            n.rylb
+        ORDER BY n.rylb
+    </select>
 </mapper>
