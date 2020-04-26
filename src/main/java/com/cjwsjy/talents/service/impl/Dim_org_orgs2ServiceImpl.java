@@ -31,4 +31,8 @@ public class Dim_org_orgs2ServiceImpl extends ServiceImpl<Dim_org_orgs2Mapper, D
     public List<Map> getEmployeeType(Map map){
         return mapper.getEmployeeType(map);
     }
+    @Override
+    public List<Map> getEmployeeTypeForRylb(Map map){
+        return mapper.getEmployeeTypeForRylb(map);
+    }
 }

@@ -16,6 +16,7 @@
         FROM
             hr_dim_org_orgs2 o
         INNER JOIN hr_dm_num_cube n ON o.shortname = n.analysisorg1
+        where n.rylb='在岗人员'
         GROUP BY
             n.analysisorg1,
             o.seq
@@ -25,7 +26,7 @@
 
     <select id="getEmployeeType" resultType="map">
         SELECT
-            rylb 'rylb',
+            ${type} 'type',
             COUNT (pk_psndoc) 'num'
         FROM
             hr_dim_org_orgs2 o
@@ -34,8 +35,37 @@
         <if test="org!=null and org!=''">
         and n.analysisorg1=#{org}
         </if>
+        <if test="rylb!=null and rylb!=''">
+            and n.rylb=#{rylb}
+        </if>
         GROUP BY
-            n.rylb
-        ORDER BY n.rylb
+        ${type}
+        ORDER BY ${type}
+    </select>
+
+    <select id="getEmployeeTypeForRylb" resultType="map">
+        select t.ryle 'type',count(ryle) 'num' from (
+        SELECT
+            case
+                WHEN n.rylb='在岗人员' and n.glbdef25='技术工人' THEN '在岗人员-工人'
+                WHEN n.rylb='在岗人员' and n.glbdef25='工人' THEN '在岗人员-工人'
+                WHEN n.rylb='在岗人员' and n.glbdef25='普通工人' THEN '在岗人员-工人'
+                WHEN n.rylb='在岗人员' and n.glbdef25='工人聘干' THEN '在岗人员-管理及技术'
+                WHEN n.rylb='在岗人员' and n.glbdef25='以工代干' THEN '在岗人员-管理及技术'
+                WHEN n.rylb='在岗人员' and n.glbdef25='干部' THEN '在岗人员-管理及技术'
+                ELSE n.rylb
+            END as 'ryle'
+        FROM
+            hr_dim_org_orgs2 o
+        INNER JOIN hr_dm_num_cube n ON o.shortname = n.analysisorg1
+        where 1=1
+        <if test="org!=null and org!=''">
+            and n.analysisorg1=#{org}
+        </if>
+        <if test="rylb!=null and rylb!=''">
+            and n.rylb=#{rylb}
+        </if>
+        ) t GROUP BY t.ryle
+        ORDER BY count(ryle)
     </select>
 </mapper>

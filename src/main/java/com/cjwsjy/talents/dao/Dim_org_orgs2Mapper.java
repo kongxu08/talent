@@ -18,5 +18,6 @@ import java.util.Map;
 public interface Dim_org_orgs2Mapper extends BaseMapper<Dim_org_orgs2> {
     List<Map> getOrgEmployeeNum();
     List<Map> getEmployeeType(Map map);
+    List<Map> getEmployeeTypeForRylb(Map map);
 
 }

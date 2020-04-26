@@ -18,4 +18,5 @@ import java.util.Map;
 public interface IDim_org_orgs2Service extends IService<Dim_org_orgs2> {
     List<Map> getOrgEmployeeNum();
     List<Map> getEmployeeType(Map map);
+    List<Map> getEmployeeTypeForRylb(Map map);
 }

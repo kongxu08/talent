@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,25 +66,56 @@ public class Dim_org_orgs2Controller {
     })
     @GetMapping("/getEmployeeType")
     @ResponseBody
-    ResponseResult getEmployeeType(@RequestParam String userName,
-                                     @RequestParam(required = false) String org) {
+    ResponseResult getEmployeeType(@RequestParam String userName
+            ,@RequestParam(required = false) String org) {
         HashMap map = new HashMap();
         if(org!=null){
             map.put("org",org);
         }
-        List<Map> types = orgService.getEmployeeType(map);
-        int total=0;
-        for(Map m:types){
-            String str = m.get("num").toString();
-            total+=Integer.parseInt(str);
+        int ntdgNum=0;
+        int wbryNum=0;
+        List<Map> newRylbs = new ArrayList<>();
+        List<Map> rylbs = orgService.getEmployeeTypeForRylb(map);
+        for (int i = 0; i <rylbs.size() ; i++) {
+            Map m = rylbs.get(i);
+            String  typeName = m.get("type").toString();
+            if(typeName.equals("待岗人员2")||typeName.equals("待岗人员1")||typeName.equals("内退人员")){
+                int j = Integer.parseInt(m.get("num").toString());
+                ntdgNum+=j;
+            }
+            else if(typeName.equals("外包人员")||typeName.equals("返聘人员")||typeName.equals("劳务派遣人员")){
+                int j = Integer.parseInt(m.get("num").toString());
+                wbryNum+=j;
+            }else {
+                newRylbs.add(m);
+            }
         }
-        Map totalMap = new HashMap();
-        totalMap.put("num",total);
-        totalMap.put("rylb","合计");
-        types.add(totalMap);
+        if(ntdgNum>0){
+            Map ntdgMap = new HashMap();
+            ntdgMap.put("type","内退待岗");
+            ntdgMap.put("num",ntdgNum);
+            newRylbs.add(ntdgMap);
+        }
+        if(wbryNum>0){
+            Map wbryMap = new HashMap();
+            wbryMap.put("type","外包人员");
+            wbryMap.put("num",wbryNum);
+            newRylbs.add(wbryMap);
+        }
+
+        map.put("type","n.rylb");
+        map.put("rylb","在岗人员");
+
+        map.put("type","n.age_range");
+        List<Map> ages = orgService.getEmployeeType(map);
+        map.put("type","n.edumemo");
+        List<Map> edus = orgService.getEmployeeType(map);
 
         JSONObject result = new JSONObject();
-        result.put("orgs", types);
+        result.put("rylb", newRylbs);
+        result.put("age", ages);
+        result.put("edu", edus);
+
         return ResponseResult.success(result, null);
     }
 }

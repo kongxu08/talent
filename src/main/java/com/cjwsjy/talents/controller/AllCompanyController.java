@@ -162,6 +162,18 @@ public class AllCompanyController {
             params = (List<String>) body.get("title");
             wrapper.and(w -> w.or(fun));
         }
+        //劳务关系
+        if (body.get("rylb") != null) {
+            column = "rylb";
+            params = (List<String>) body.get("rylb");
+            wrapper.and(w -> w.or(fun));
+        }
+        //工作性质
+        if (body.get("glbdef25") != null) {
+            column = "glbdef25";
+            params = (List<String>) body.get("glbdef25");
+            wrapper.and(w -> w.or(fun));
+        }
         wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         IPage result = dmNumCubeService.page(page, wrapper);
