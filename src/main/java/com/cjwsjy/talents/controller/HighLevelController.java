@@ -57,7 +57,14 @@ public class HighLevelController {
         int pagesize = Integer.parseInt(body.get("pagesize").toString());
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<Dm_num_cube>();
-        String sql = "SELECT DISTINCT pk_psndoc FROM hr_dm_hi_psndoc_glbdef11";
+
+        String param = "";
+        //奖励名称
+        if (body.get("awardName") != null) {
+            param+=String.format(" and b.glbdef8name='%s'",body.get("awardName"));
+        }
+
+        String sql = String .format("SELECT DISTINCT b.pk_psndoc FROM hr_dm_hi_psndoc_glbdef11 b where 1=1 %s",param);
         wrapper.inSql("pk_psndoc",sql);
         wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
         IPage result = dmNumCubeService.page(page,wrapper);

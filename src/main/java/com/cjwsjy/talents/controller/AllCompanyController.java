@@ -63,7 +63,7 @@ public class AllCompanyController {
     @Autowired
     private IDm_lwlzService dm_lwlzService;
     //http://localhost:8068/talent/rest/manageTalentPage?userId=1&current=12&pagesize=10
-    //http://10.6.180.131:8068/talent/swagger-ui.html
+    //http://172.16.13.122:8068/talent/swagger-ui.html
 //       "pk_psndoc": "0001A310000000000RD3"
     @ApiOperation(notes = "获取全员信息查询分页数据", httpMethod = "POST", value = "获取全员信息查询分页数据")
     @ApiImplicitParams({
