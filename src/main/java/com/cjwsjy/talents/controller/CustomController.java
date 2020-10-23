@@ -81,6 +81,24 @@ public class CustomController {
         return ResponseResult.success(list, null);
     }
 
+    @ApiOperation(value = "领导班子分页数据")
+    @PostMapping("/getLDBZPage")
+    @ResponseBody
+    ResponseResult getLDBZPage(@RequestBody Map body) {
+        int current = Integer.parseInt(body.get("current").toString());
+        int pagesize = Integer.parseInt(body.get("pagesize").toString());
+        String age_range = body.get("ages").toString();
+        IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
+        QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<Dm_num_cube>();
+        String sql = "SELECT DISTINCT pk_psndoc from hr_dm_xzzw_post WHERE glbdef12 in ('副处级','正处级','副局级','正局级') AND glbdef11 <> '让岗'";
+        wrapper.like("age_range", age_range);
+        wrapper.inSql("pk_psndoc",sql);
+        wrapper.ne("glrc","");
+        wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
+        IPage result = dmNumCubeService.page(page, wrapper);
+        return ResponseResult.success(result, null);
+    }
+
     //{"current":"1","pagesize":"10","ManageLevel":"公司级","ProjectType":"勘察设计咨询","NationalType":"国内","ProjectLevel":"1","OBS_Name":"项目助理"}
     @ApiOperation(value = "核心项目团队")
     @PostMapping("/getCoreTeam")
