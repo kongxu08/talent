@@ -29,7 +29,7 @@ public class CustomController {
     private IDm_num_cubeService dmNumCubeService;
 
     @ApiOperation(value = "人员岗级分布")
-    @GetMapping("/getLevelNum")
+    @PostMapping("/getLevelNum")
     @ResponseBody
     ResponseResult getLevelNum(@RequestBody Map body) {
         String param = "";
@@ -48,7 +48,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "人员专业技术职务")
-    @GetMapping("/getPostNum")
+    @PostMapping("/getPostNum")
     @ResponseBody
     ResponseResult getPostNum(@RequestBody Map body) {
         String param = "";
@@ -163,7 +163,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "获得称号人才数量")
-    @GetMapping("/getHighTalentNum")
+    @PostMapping("/getHighTalentNum")
     @ResponseBody
     ResponseResult getCHNum(@RequestBody Map body) {
         String param = "";
@@ -180,7 +180,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "执（职）业资格（含三维设计证书）")
-    @GetMapping("/getZYZGNum")
+    @PostMapping("/getZYZGNum")
     @ResponseBody
     ResponseResult getZYZGNum(@RequestBody Map body) {
         String param = "";
@@ -197,7 +197,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "近五年退休人员及趋势")
-    @GetMapping("/getTXRYQSNum")
+    @PostMapping("/getTXRYQSNum")
     @ResponseBody
     ResponseResult getTXRYQSNum(@RequestBody Map body) {
         String param = "";
@@ -216,7 +216,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "近五年退休人员及趋势分页查询")
-    @GetMapping("/getTXRYQSPage")
+    @PostMapping("/getTXRYQSPage")
     @ResponseBody
     ResponseResult getTXRYQSPage(@RequestBody Map body) {
         int current = Integer.parseInt(body.get("current").toString());
@@ -245,7 +245,7 @@ public class CustomController {
     }
 
     @ApiOperation(value = "交流挂职人员分页查询")
-    @GetMapping("/getJLGZPage")
+    @PostMapping("/getJLGZPage")
     @ResponseBody
     ResponseResult getJLGZPage(@RequestBody Map body) {
         int current = Integer.parseInt(body.get("current").toString());
