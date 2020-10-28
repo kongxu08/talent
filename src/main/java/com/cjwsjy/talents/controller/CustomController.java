@@ -100,17 +100,20 @@ public class CustomController {
 
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<Dm_num_cube>();
-        String sql = "SELECT DISTINCT pk_psndoc from hr_dm_xzzw_post WHERE glbdef12 in ('副处级','正处级','副局级','正局级') AND glbdef11 <> '让岗'";
+
         //年龄段
         String age_range = body.get("ages").toString();
-        wrapper.like("age_range", age_range);
+        String sql = String.format("SELECT pk_psndoc FROM hr_dm_num_cube " +
+                " WHERE ( glbdef21 != '让岗' OR glbdef21 IS NULL )   " +
+                " AND ( glbdef22 = '正局级' OR glbdef22 = '副局级' OR glbdef22 = '正处级' OR glbdef22 = '副处级' ) and age_range='%s' ",age_range);
+
         //单位
         if (body.get("org") != null) {
            String org=body.get("org").toString();
            wrapper.eq("analysisorg1",org);
         }
+
         wrapper.inSql("pk_psndoc",sql);
-        wrapper.ne("glrc","");
         wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
         IPage result = dmNumCubeService.page(page, wrapper);
         return ResponseResult.success(result, null);
@@ -165,7 +168,7 @@ public class CustomController {
     @ApiOperation(value = "获得称号人才数量")
     @PostMapping("/getHighTalentNum")
     @ResponseBody
-    ResponseResult getCHNum(@RequestBody Map body) {
+    ResponseResult getHighTalentNum(@RequestBody Map body) {
         String param = "";
         //单位
         if (body.get("org") != null) {
@@ -173,7 +176,7 @@ public class CustomController {
         }
         List list = mapper.custom(String.format(" select glbdef8name 'title',count(glbdef8name) 'num' " +
                 " from HR_DM_HI_PSNDOC_GLBDEF11 a,hr_dm_num_cube b " +
-                " where glbdef8name is not null and a.pk_psndoc=b.pk_psndoc " +
+                " where glbdef8name is not null and a.pk_psndoc=b.pk_psndoc %s" +
                 " GROUP BY glbdef8name,glbdef8code " +
                 " ORDER BY glbdef8code ",param));
         return ResponseResult.success(list, null);
@@ -231,17 +234,20 @@ public class CustomController {
         }
         //工种glbdef25
         String glbdef25 = body.get("glbdef25").toString();
-        List list = mapper.custom(String.format("SELECT " +
+        String sql = String.format("SELECT " +
                 " pk_psndoc  " +
                 " FROM " +
                 " hr_dm_num_cube_tx a  " +
                 " WHERE " +
-                " 1 = 1 AND glbdef25 IN ( %s )  " +
+                " 1 = 1 AND glbdef25 IN ( '%s' )  " +
                 " %s AND ( " +
                 " ( sex = '男' AND age > 60 )  " +
                 " OR ( sex = '女' AND age > 50 AND glbdef25 = '工人' )  " +
-                " OR ( sex = '女' AND age > 55 AND glbdef25 != '工人' ) ",glbdef25,param));
-        return ResponseResult.success(list, null);
+                " OR ( sex = '女' AND age > 55 AND glbdef25 != '工人' ) )",glbdef25,param);
+        wrapper.inSql("pk_psndoc",sql);
+        wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
+        IPage result = dmNumCubeService.page(page, wrapper);
+        return ResponseResult.success(result, null);
     }
 
     @ApiOperation(value = "交流挂职人员分页查询")

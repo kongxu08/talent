@@ -24,6 +24,7 @@ import java.util.Map;
  * @since 2019-08-07
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/dW_ZYZG")
 public class DW_ZYZGController {
 
@@ -48,6 +49,11 @@ public class DW_ZYZGController {
         //奖励名称
         if (body.get("glbdef2") != null) {
             param+=String.format(" and b.glbdef2='%s'",body.get("glbdef2"));
+        }
+        //单位
+        if (body.get("org") != null) {
+            String org=body.get("org").toString();
+            wrapper.eq("analysisorg1",org);
         }
 
         String sql = String .format("SELECT DISTINCT b.pk_psndoc FROM hr_dw_zyzg b where 1=1 %s",param);
