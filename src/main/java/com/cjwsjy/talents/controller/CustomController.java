@@ -37,13 +37,13 @@ public class CustomController {
         if (body.get("org") != null) {
             param+=String.format(" and analysisorg1='%s'",body.get("org"));
         }
-        List list = mapper.custom(String.format("SELECT glbdef3 'title',  COUNT ( glbdef3 ) as 'num' " +
+        List list = mapper.custom(String.format(
+                "SELECT case when glbdef3 is not null then glbdef3 else '0未定岗' end 'title',  COUNT ( rylb ) as 'num' " +
                 "FROM   hr_dm_num_cube  " +
                 "WHERE " +
-                " glbdef3 IS NOT NULL %s " +
+                " rylb='在岗人员' %s " +
                 "GROUP BY " +
-                " glbdef3 " +
-                " ORDER BY COUNT ( glbdef3 ) desc",param));
+                " glbdef3 ",param));
         return ResponseResult.success(list, null);
     }
 
@@ -85,7 +85,7 @@ public class CustomController {
                 " COUNT ( age_range ) AS 'num' \n" +
                 " FROM hr_dm_num_cube \n" +
                 " WHERE\n" +
-                " 1=1 %s and (glbdef21!='让岗' or glbdef21 is null) and (glbdef22='正局级' or glbdef22='副局级' or glbdef22='正处级' or glbdef22='副处级' )"+
+                " 1=1 %s and (glbdef21!='让岗' or glbdef21 is null) and (glbdef22='正局级' or glbdef22='副局级' or glbdef22='正处级' or glbdef22='副处级' ) and rylb='在岗人员' "+
                 " GROUP BY age_range ",param);
         List list = mapper.custom(sql);
         return ResponseResult.success(list, null);
@@ -105,7 +105,7 @@ public class CustomController {
         String age_range = body.get("ages").toString();
         String sql = String.format("SELECT pk_psndoc FROM hr_dm_num_cube " +
                 " WHERE ( glbdef21 != '让岗' OR glbdef21 IS NULL )   " +
-                " AND ( glbdef22 = '正局级' OR glbdef22 = '副局级' OR glbdef22 = '正处级' OR glbdef22 = '副处级' ) and age_range='%s' ",age_range);
+                " AND ( glbdef22 = '正局级' OR glbdef22 = '副局级' OR glbdef22 = '正处级' OR glbdef22 = '副处级' ) and rylb='在岗人员' and age_range='%s' ",age_range);
 
         //单位
         if (body.get("org") != null) {
@@ -165,6 +165,48 @@ public class CustomController {
         return ResponseResult.success(result, null);
     }
 
+    @ApiOperation(value = "核心项目团队人数")
+    @PostMapping("/getCoreTeamNum")
+    @ResponseBody
+    ResponseResult getCoreTeamNum(@RequestBody Map body) {
+        String param = "";
+        //管理层级
+        if (body.get("ManageLevel") != null) {
+            param+=String.format(" and ManageLevel='%s'",body.get("ManageLevel"));
+        }
+        //业务类型
+        if (body.get("ProjectType") != null) {
+            param+=String.format(" and ProjectType='%s'",body.get("ProjectType"));
+        }
+        //项目岗位
+        if (body.get("OBS_Name") != null) {
+            param+=String.format(" and OBS_Name='%s'",body.get("OBS_Name"));
+        }
+        //国内/国外
+        if (body.get("NationalType") != null) {
+            param+=String.format(" and NationalType='%s'",body.get("NationalType"));
+        }
+        //项目级别
+        if (body.get("ProjectLevel") != null) {
+            param+=String.format(" and ProjectLevel='%s'",body.get("ProjectLevel"));
+        }
+        //项目状态
+        if (body.get("ProjectStatus") != null) {
+            param+=String.format(" and ProjectStatus='%s'",body.get("ProjectStatus"));
+        }
+        //责任单位
+        if (body.get("DutyUnit") != null) {
+            param+=String.format(" and DutyUnit='%s'",body.get("DutyUnit"));
+        }
+
+        String sql = String .format("select a.analysisorg1 'title',count(a.analysisorg1) 'num' from hr_dm_num_cube a where a.code in ( " +
+                " select distinct b.WorkNo from hr_dm_projectuser b where 1=1 %s) " +
+                " GROUP BY a.analysisorg1 " +
+                " ORDER BY count(a.analysisorg1) desc",param);
+        List list = mapper.custom(sql);
+        return ResponseResult.success(list, null);
+    }
+
     @ApiOperation(value = "获得称号人才数量")
     @PostMapping("/getHighTalentNum")
     @ResponseBody
@@ -203,21 +245,20 @@ public class CustomController {
     @PostMapping("/getTXRYQSNum")
     @ResponseBody
     ResponseResult getTXRYQSNum(@RequestBody Map body) {
+        String sql = " select t.enddate 'title',count(t.enddate) 'num' from (\n" +
+                "SELECT DISTINCT hr_dm_num_cube_tx.pk_psndoc pk_psndoc, CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END enddate\n" +
+                "FROM HR_DM_NUM_CUBE_TX hr_dm_num_cube_tx LEFT JOIN (SELECT * FROM hr_dm_psnjob_trnstype WHERE trnstype = '退休人员') t_1 ON hr_dm_num_cube_tx.pk_psndoc = t_1.pk_psndoc WHERE (CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END) >= (YEAR(getdate()) - 5) AND (CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END) <= (YEAR(getdate()) + 5) %s" +
+                ") t GROUP BY t.enddate ORDER BY t.enddate";
         String param = "";
         //单位
         if (body.get("org") != null) {
-            param+=String.format(" and a.analysisorg1='%s'",body.get("org"));
+            param+=String.format(" and hr_dm_num_cube_tx.analysisorg1='%s'",body.get("org"));
         }
-        List list = mapper.custom(String.format(" select t.glbdef25,sum(t.num) 'num' from ( " +
-                " select sex,age,glbdef25,count(glbdef25) 'num' " +
-                " from hr_dm_num_cube_tx a where 1=1 %s " +
-                " GROUP BY sex,glbdef25,age " +
-                " HAVING glbdef25 in('技术工人','普通工人','工人') and ((sex='男' and age>60) or (sex='女' and age>50 and glbdef25='工人') or (sex='女' and age>55 and glbdef25!='工人')) " +
-                " ) t " +
-                " GROUP BY glbdef25",param));
+        List list = mapper.custom(String.format(sql,param));
         return ResponseResult.success(list, null);
     }
 
+//    {"current":"1","pagesize":"10","enddate":"2019","org":"院部"}
     @ApiOperation(value = "近五年退休人员及趋势分页查询")
     @PostMapping("/getTXRYQSPage")
     @ResponseBody
@@ -228,28 +269,27 @@ public class CustomController {
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<Dm_num_cube>();
         String param = "";
+        String sql = "select t.pk_psndoc from ( " +
+                "SELECT DISTINCT hr_dm_num_cube_tx.pk_psndoc pk_psndoc, CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END enddate " +
+                "FROM HR_DM_NUM_CUBE_TX hr_dm_num_cube_tx LEFT JOIN (SELECT * FROM hr_dm_psnjob_trnstype WHERE trnstype = '退休人员') t_1 ON hr_dm_num_cube_tx.pk_psndoc = t_1.pk_psndoc WHERE (CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END) >= (YEAR(getdate()) - 5) AND (CASE  WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '男' AND (60 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (60 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND hr_dm_num_cube_tx.glbdef25 IN ('技术工人', '普通工人', '工人') AND (50 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (50 + YEAR(hr_dm_num_cube_tx.birthdate)) WHEN hr_dm_num_cube_tx.pk_psncl <> '1001A3100000000006ML' AND hr_dm_num_cube_tx.sex = '女' AND (55 + YEAR(hr_dm_num_cube_tx.birthdate) - YEAR(getdate())) >= 0 THEN (55 + YEAR(hr_dm_num_cube_tx.birthdate)) ELSE isnull(t_1.cyear, 0) END) <= (YEAR(getdate()) + 5) %s " +
+                ") t where 1=1 ";
         //单位
         if (body.get("org") != null) {
-            param+=String.format(" and a.analysisorg1='%s'",body.get("org"));
+            param=String.format(" and hr_dm_num_cube_tx.analysisorg1='%s'",body.get("org"));
         }
-        //工种glbdef25
-        String glbdef25 = body.get("glbdef25").toString();
-        String sql = String.format("SELECT " +
-                " pk_psndoc  " +
-                " FROM " +
-                " hr_dm_num_cube_tx a  " +
-                " WHERE " +
-                " 1 = 1 AND glbdef25 IN ( '%s' )  " +
-                " %s AND ( " +
-                " ( sex = '男' AND age > 60 )  " +
-                " OR ( sex = '女' AND age > 50 AND glbdef25 = '工人' )  " +
-                " OR ( sex = '女' AND age > 55 AND glbdef25 != '工人' ) )",glbdef25,param);
+        sql = String.format(sql,param);
+        //年份
+        if(body.get("enddate") != null) {
+            sql+=String.format(" and t.enddate='%s'",body.get("enddate"));
+        }
+
         wrapper.inSql("pk_psndoc",sql);
-        wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
+//        wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
         IPage result = dmNumCubeService.page(page, wrapper);
         return ResponseResult.success(result, null);
     }
 
+    //{"current":"1","pagesize":"10","workcorp":"阿里"}
     @ApiOperation(value = "交流挂职人员分页查询")
     @PostMapping("/getJLGZPage")
     @ResponseBody
@@ -259,15 +299,26 @@ public class CustomController {
 
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         QueryWrapper<Dm_num_cube> wrapper = new QueryWrapper<Dm_num_cube>();
-        String sql = "select pk_psndoc from hr_dw_num_jlgz";
+        String sql = "select pk_psndoc from hr_dw_num_jlgz where 1=1 %s";
+        String param = "";
         //单位
-        if (body.get("org") != null) {
-            String org=body.get("org").toString();
-            wrapper.eq("analysisorg1",org);
+        if (body.get("workcorp") != null) {
+            param+=String.format(" and workcorp='%s'",body.get("workcorp"));
+
         }
+        sql = String.format(sql,param);
         wrapper.inSql("pk_psndoc",sql);
         wrapper.orderByAsc("CORPSEQ","DEPTSEQ","SHOWORDER");
         IPage result = dmNumCubeService.page(page, wrapper);
         return ResponseResult.success(result, null);
+    }
+
+    @ApiOperation(value = "交流挂职人数")
+    @PostMapping("/getJLGZNum")
+    @ResponseBody
+    ResponseResult getJLGZNum(@RequestBody Map body) {
+        String sql = "select workcorp 'title',count(workcorp) 'num' from hr_dw_num_jlgz GROUP BY workcorp";
+        List list = mapper.custom(sql);
+        return ResponseResult.success(list, null);
     }
 }
