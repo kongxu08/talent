@@ -289,7 +289,7 @@ public class CustomController {
         return ResponseResult.success(result, null);
     }
 
-    //{"current":"1","pagesize":"10","workcorp":"阿里"}
+    //{"current":"1","pagesize":"10","org":"阿里"}
     @ApiOperation(value = "交流挂职人员分页查询")
     @PostMapping("/getJLGZPage")
     @ResponseBody
@@ -302,8 +302,8 @@ public class CustomController {
         String sql = "select pk_psndoc from hr_dw_num_jlgz where 1=1 %s";
         String param = "";
         //单位
-        if (body.get("workcorp") != null) {
-            param+=String.format(" and workcorp='%s'",body.get("workcorp"));
+        if (body.get("org") != null) {
+            param+=String.format(" and workcorp='%s'",body.get("org"));
 
         }
         sql = String.format(sql,param);
