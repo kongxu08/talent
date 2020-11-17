@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class CustomController {
                 " COUNT ( age_range ) AS 'num' \n" +
                 " FROM hr_dm_num_cube \n" +
                 " WHERE\n" +
-                " 1=1 %s and (glbdef21!='让岗' or glbdef21 is null) and (glbdef22='正局级' or glbdef22='副局级' or glbdef22='正处级' or glbdef22='副处级' ) and rylb='在岗人员' "+
+                " 1=1 %s and glrc in('职能部门主任','职能部门副主任','二级单位主要负责人','二级单位领导班子其他成员') and rylb='在岗人员'"+
                 " GROUP BY age_range ",param);
         List list = mapper.custom(sql);
         return ResponseResult.success(list, null);
@@ -103,9 +104,9 @@ public class CustomController {
 
         //年龄段
         String age_range = body.get("ages").toString();
-        String sql = String.format("SELECT pk_psndoc FROM hr_dm_num_cube " +
-                " WHERE ( glbdef21 != '让岗' OR glbdef21 IS NULL )   " +
-                " AND ( glbdef22 = '正局级' OR glbdef22 = '副局级' OR glbdef22 = '正处级' OR glbdef22 = '副处级' ) and rylb='在岗人员' and age_range='%s' ",age_range);
+        String sql = String.format("SELECT pk_psndoc FROM hr_dm_num_cube WHERE " +
+                " glrc in('职能部门主任','职能部门副主任','二级单位主要负责人','二级单位领导班子其他成员') and rylb='在岗人员'"+
+                " and age_range='%s' ",age_range);
 
         //单位
         if (body.get("org") != null) {
@@ -158,7 +159,8 @@ public class CustomController {
             param+=String.format(" and DutyUnit='%s'",body.get("DutyUnit"));
         }
 
-        String sql = String .format("select distinct b.WorkNo from hr_dm_projectuser b where 1=1 %s",param);
+        String sql = String .format("select distinct b.WorkNo from hr_dm_projectuser b " +
+                "where b.OBS_Name in ('项目经理','项目常务副经理','项目副经理','项目首席科学家','项目BIM总监','项目总工','项目副总工') %s",param);
         wrapper.inSql("code",sql);
         IPage<Dm_num_cube> page = new Page<Dm_num_cube>(current, pagesize);
         IPage result = dmNumCubeService.highLevevlQuery(page,wrapper);
@@ -168,10 +170,12 @@ public class CustomController {
     @ApiOperation(value = "核心项目团队人数")
     @PostMapping("/getCoreTeamNum")
     @ResponseBody
-    ResponseResult getCoreTeamNum(@RequestBody Map body) {
+    ResponseResult getCoreTeamNum(
+            @RequestBody Map body
+    ) {
         String param = "";
         //管理层级
-        if (body.get("ManageLevel") != null) {
+/*        if (body.get("ManageLevel") != null) {
             param+=String.format(" and ManageLevel='%s'",body.get("ManageLevel"));
         }
         //业务类型
@@ -193,18 +197,20 @@ public class CustomController {
         //项目状态
         if (body.get("ProjectStatus") != null) {
             param+=String.format(" and ProjectStatus='%s'",body.get("ProjectStatus"));
-        }
+        }*/
         //责任单位
         if (body.get("DutyUnit") != null) {
             param+=String.format(" and DutyUnit='%s'",body.get("DutyUnit"));
         }
+        Map map = new HashMap();
+        for (int i = 1; i <5 ; i++) {
+            String sql = String .format("select b.OBS_Name 'title',(select count(distinct t.WorkNo) from hr_dm_projectuser t where  t.ProjectLevel='%s' and t.OBS_Name=b.OBS_Name %s) 'num'" +
+                    " from hr_dm_projectuser b " +
+                    " where  b.ProjectLevel='%s' and b.OBS_Name in ('项目经理','项目常务副经理','项目副经理','项目首席科学家','项目BIM总监','项目总工','项目副总工')  GROUP BY b.OBS_Name",i,param,i);
+            map.put(String.valueOf(i),mapper.custom(sql));
+        }
 
-        String sql = String .format("select a.analysisorg1 'title',count(a.analysisorg1) 'num' from hr_dm_num_cube a where a.code in ( " +
-                " select distinct b.WorkNo from hr_dm_projectuser b where 1=1 %s) " +
-                " GROUP BY a.analysisorg1 " +
-                " ORDER BY count(a.analysisorg1) desc",param);
-        List list = mapper.custom(sql);
-        return ResponseResult.success(list, null);
+        return ResponseResult.success(map, null);
     }
 
     @ApiOperation(value = "获得称号人才数量")
@@ -216,7 +222,7 @@ public class CustomController {
         if (body.get("org") != null) {
             param+=String.format(" and b.analysisorg1='%s'",body.get("org"));
         }
-        List list = mapper.custom(String.format(" select glbdef8name 'title',count(glbdef8name) 'num' " +
+        List list = mapper.custom(String.format(" select glbdef8name 'title',(count(glbdef8name) / 10)+1 'num',count(glbdef8name) 'val' " +
                 " from HR_DM_HI_PSNDOC_GLBDEF11 a,hr_dm_num_cube b " +
                 " where glbdef8name is not null and a.pk_psndoc=b.pk_psndoc %s" +
                 " GROUP BY glbdef8name,glbdef8code " +
@@ -233,7 +239,7 @@ public class CustomController {
         if (body.get("org") != null) {
             param+=String.format(" and c.analysisorg1='%s'",body.get("org"));
         }
-        List list = mapper.custom(String.format(" select a.glbdef2 'title',count(a.glbdef2) 'num' " +
+        List list = mapper.custom(String.format(" select a.glbdef2 'title',(count( a.glbdef2 ) / 50)+1 'num',count( a.glbdef2 ) 'val' " +
                 " from hr_dw_zyzg a,HR_DIM_ZYZG b,hr_dm_num_cube c " +
                 " where a.glbdef2=b.name and c.pk_psndoc=a.pk_psndoc and a.glbdef2 is not null and a.pk_psndoc is not null %s " +
                 " GROUP BY a.glbdef2,b.code " +
