@@ -225,6 +225,7 @@ public class CustomController {
         List list = mapper.custom(String.format(" select glbdef8name 'title',(count(glbdef8name) / 10)+1 'num',count(glbdef8name) 'val' " +
                 " from HR_DM_HI_PSNDOC_GLBDEF11 a,hr_dm_num_cube b " +
                 " where glbdef8name is not null and a.pk_psndoc=b.pk_psndoc %s" +
+                " and (b.rylb ='在岗人员' or b.rylb='待岗人员1' or b.rylb='待岗人员2'or b.rylb='内退人员' or b.rylb='人才派遣')" +
                 " GROUP BY glbdef8name,glbdef8code " +
                 " ORDER BY glbdef8code ",param));
         return ResponseResult.success(list, null);
@@ -242,6 +243,7 @@ public class CustomController {
         List list = mapper.custom(String.format(" select a.glbdef2 'title',(count( a.glbdef2 ) / 50)+1 'num',count( a.glbdef2 ) 'val' " +
                 " from hr_dw_zyzg a,HR_DIM_ZYZG b,hr_dm_num_cube c " +
                 " where a.glbdef2=b.name and c.pk_psndoc=a.pk_psndoc and a.glbdef2 is not null and a.pk_psndoc is not null %s " +
+                " and (c.rylb ='在岗人员' or c.rylb='待岗人员1' or c.rylb='待岗人员2'or c.rylb='内退人员' or c.rylb='人才派遣')" +
                 " GROUP BY a.glbdef2,b.code " +
                 " ORDER BY b.code",param));
         return ResponseResult.success(list, null);

@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -271,6 +272,16 @@ public class HighLevelController {
             }
             wrapper.exists(sql.toString());
         }
+
+        //过滤退休员工
+        column="rylb";
+        params=new ArrayList<>();
+        params.add("在岗人员");
+        params.add("待岗人员1");
+        params.add("待岗人员2");
+        params.add("内退人员");
+        params.add("人才派遣");
+        wrapper.and(w -> w.or(fun));
 
         String sql = "SELECT DISTINCT pk_psndoc FROM hr_dm_hi_psndoc_glbdef11";
         wrapper.inSql("pk_psndoc",sql);

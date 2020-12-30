@@ -13,7 +13,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -30,6 +33,17 @@ public class DW_ZYZGController {
 
     @Autowired
     private IDm_num_cubeService dmNumCubeService;
+
+    String column = null;
+    List<String> params = null;
+    Function<QueryWrapper<Dm_num_cube>, QueryWrapper<Dm_num_cube>> fun = (w) -> {
+        for (int i = 0; i < params.size(); i++) {
+            w.or().eq(column, params.get(i));
+        }
+        params = null;
+        column = null;
+        return w;
+    };
 
 //     {"pagesize":10,"current":1,"glbdef2":"咨询工程师(投资)"}
     @ApiOperation(notes = "获取执业资格页数据", httpMethod = "POST", value = "获取执业资格页数据")
@@ -55,6 +69,15 @@ public class DW_ZYZGController {
             String org=body.get("org").toString();
             wrapper.eq("analysisorg1",org);
         }
+        //过滤退休员工
+        column="rylb";
+        params=new ArrayList<>();
+        params.add("在岗人员");
+        params.add("待岗人员1");
+        params.add("待岗人员2");
+        params.add("内退人员");
+        params.add("人才派遣");
+        wrapper.and(w -> w.or(fun));
 
         String sql = String .format("SELECT DISTINCT b.pk_psndoc FROM hr_dw_zyzg b where 1=1 %s",param);
         wrapper.inSql("pk_psndoc",sql);
