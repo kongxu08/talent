@@ -329,4 +329,13 @@ public class CustomController {
         List list = mapper.custom(sql);
         return ResponseResult.success(list, null);
     }
+
+    @ApiOperation(value = "获取人员类别")
+    @PostMapping("/getRylb")
+    @ResponseBody
+    ResponseResult getRylb(@RequestBody Map body) {
+        String sql = "select rylb from hr_dm_num_cube GROUP BY rylb ORDER BY rylb desc";
+        List list = mapper.custom(sql);
+        return ResponseResult.success(list, null);
+    }
 }

@@ -98,7 +98,7 @@ public class Dim_org_orgs2Controller {
         }
         if(wbryNum>0){
             Map wbryMap = new HashMap();
-            wbryMap.put("type","外包人员");
+            wbryMap.put("type","劳务派遣人员");
             wbryMap.put("num",wbryNum);
             newRylbs.add(wbryMap);
         }
