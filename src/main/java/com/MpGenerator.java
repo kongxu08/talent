@@ -41,7 +41,7 @@ public class MpGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setDbType(DbType.SQL_SERVER);
-        dsc.setUrl("jdbc:sqlserver://10.6.189.12:1433;DatabaseName=BQDW");
+        dsc.setUrl("jdbc:sqlserver://10.6.191.38:1433;DatabaseName=BQDW");
         dsc.setDriverName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         dsc.setUsername("bqdw");
         dsc.setPassword("cjwsjy.nchr");
@@ -53,11 +53,11 @@ public class MpGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.nochange);// 表名生成策略
 
-        strategy.setTablePrefix(new String[]{"hr_dm_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{"v_"});// 此处可以修改为您的表前缀
         strategy.entityTableFieldAnnotationEnable(true);
         strategy.setRestControllerStyle(true);
         strategy.setEntityLombokModel(false);
-        strategy.setInclude("hr_dm_lunwen");//修改替换成你需要的表名，多个表名传数组
+        strategy.setInclude("v_sm_user");//修改替换成你需要的表名，多个表名传数组
 
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");

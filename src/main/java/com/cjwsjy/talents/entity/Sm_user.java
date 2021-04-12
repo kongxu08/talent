@@ -26,6 +26,17 @@ public class Sm_user implements Serializable {
     @TableField("user_note")
     private String user_note;
 
+    @TableField("gj")
+    private String gj;
+
+    public String getGj() {
+        return gj;
+    }
+
+    public void setGj(String gj) {
+        this.gj = gj;
+    }
+
     public String getUser_code() {
         return user_code;
     }
@@ -56,6 +67,7 @@ public class Sm_user implements Serializable {
         "user_code=" + user_code +
         ", user_name=" + user_name +
         ", user_note=" + user_note +
+        ", gj=" + gj +
         "}";
     }
 }

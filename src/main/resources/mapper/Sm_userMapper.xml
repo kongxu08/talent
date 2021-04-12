@@ -7,6 +7,7 @@
         <result column="user_code" property="user_code" />
         <result column="user_name" property="user_name" />
         <result column="user_note" property="user_note" />
+        <result column="gj" property="gj" />
     </resultMap>
 
     <select id="getPic" parameterType="java.util.Map" resultType="map" >
